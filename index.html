@@ -1,0 +1,152 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body{
+            background-image: url(inir.jpg);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .container{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        .header{
+            text-align: center;
+            padding: 20px 50px;
+            color: white;
+        }
+        .header h1{
+            margin-top: 30px;
+        }
+        .header input{
+            font-size: 20px;
+            text-align: center;
+            margin-top: 20px;
+            border-radius: 100px 10px;
+           outline: none;
+           width: 400px;
+           color: red;
+           cursor: pointer;
+        }
+        .content{
+            text-align: center;
+            height: 280px;
+            width: 320px;
+            height: 450px;
+            color: black;
+            border-radius: 0 10px 10px 0px;
+            box-shadow: 8px 8px 10px rgb(77, 11, 11);
+        }
+        .city{
+            font-size: 30px;
+            font-weight: 700;
+        }
+        .temp{
+            font-size: 50px;
+            font-weight: 900;
+            margin-top: 10px;
+        }
+        .desc{
+            font-size: 30px;
+            font-weight: 800;
+        }
+        .min{
+            font-size: 35px;
+            font-weight: 800;
+            margin-top: 10px;
+        }
+        .max{
+            font-size: 35px;
+            font-weight: 800;
+        }
+        .hissedilensicaklik{
+            font-size: 35px;
+            margin-top: 10px;
+            font-weight: 800;
+        }
+        .nem{
+            font-size: 35px;
+            font-weight: 800;
+            margin-top: 10px;
+        }
+        .denizseviyesi{
+            margin-top: 10px;
+            font-size: 35px;
+            font-weight: 800;
+        }
+        div{
+            cursor: default;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Hava Durumu</h1>
+            <input type="text" placeholder="Şehir Veya Ülke Giriniz" id="searchBar">
+        </div>
+        <div class="content">
+            <div class="city">Şehir</div>
+            <div class="temp">°C</div>
+            <div class="desc">Hava</div>
+            <div class="min">Min. Sıcaklık</div>
+            <div class="max">Max Sıcaklık</div>
+            <div class="hissedilensicaklik">Hissedilen S.</div>
+            <div class="nem">Nem</div>
+            <div class="denizseviyesi">Deniz S.</div>
+        </div>
+    </div>
+    <script>
+        const url = 'https://api.openweathermap.org/data/2.5/'
+        const key = '0545858a38d30f7afe522536a9d20e89'
+
+        const setQuery = (e) => {
+            if(e.keyCode == '13')
+            getResult(searchBar.value)
+        };
+        const getResult = (cityName) => {
+            let query = `${url}weather?q=${cityName}&appid=${key}&units=metric&lang=tr`
+            fetch(query)
+            .then(weather=>{
+                return weather.json()
+            })
+            .then(displayResult)
+        };
+        const displayResult = (result) =>{
+            let city = document.querySelector('.city');
+            city.innerText = `${result.name},${result.sys.country}`;
+            let temp = document.querySelector('.temp');
+            temp.innerText = `${Math.round(result.main.temp)}°C`
+            let desc = document.querySelector('.desc');
+            desc.innerText = result.weather[0].description
+            let min = document.querySelector('.min');
+            min.innerText = `Minimum Sıcaklık:${Math.round(result.main.temp_min)}°C`
+            let nem = document.querySelector('.nem');
+            nem.innerText = `Nem Oranı:${result.main.humidity}`
+            let denizseviyesi = document.querySelector('.denizseviyesi');
+            denizseviyesi.innerText = `Deniz Seviyesi:${result.main.pressure}`
+            let hissedilensicaklik = document.querySelector('.hissedilensicaklik');
+            hissedilensicaklik.innerText = `Hissedilen S.:${result.main.feels_like}`;
+            let max = document.querySelector('.max');
+            max.innerText = `Max Sıcaklık:${result.main.temp_max}`
+        };
+        const searchBar = document.getElementById('searchBar');
+        searchBar.addEventListener('keypress', setQuery)
+    </script>
+</body>
+</html>
